@@ -305,19 +305,22 @@ int main(int argc, char **argv) {
         printf("got  %lluMB (%llu bytes)", (ull) wantbytes >> 20,
             (ull) wantbytes);
         fflush(stdout);
+
+        if ((size_t) buf % pagesize) {
+            /* printf("aligning to page -- was 0x%tx\n", buf); */
+            aligned = (void volatile *) ((size_t) buf & pagesizemask) + pagesize;
+            /* printf("  now 0x%tx -- lost %d bytes\n", aligned,
+             *      (size_t) aligned - (size_t) buf);
+             */
+            bufsize -= ((size_t) aligned - (size_t) buf);
+        } else {
+            aligned = buf;
+        }
+
+        do_mlock = 0; // Android App cannot mlock without root
         if (do_mlock) {
             printf(", trying mlock ...");
             fflush(stdout);
-            if ((size_t) buf % pagesize) {
-                /* printf("aligning to page -- was 0x%tx\n", buf); */
-                aligned = (void volatile *) ((size_t) buf & pagesizemask) + pagesize;
-                /* printf("  now 0x%tx -- lost %d bytes\n", aligned,
-                 *      (size_t) aligned - (size_t) buf);
-                 */
-                bufsize -= ((size_t) aligned - (size_t) buf);
-            } else {
-                aligned = buf;
-            }
             /* Try mlock */
             if (mlock((void *) aligned, bufsize) < 0) {
                 switch(errno) {
