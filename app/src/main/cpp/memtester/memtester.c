@@ -29,6 +29,8 @@
 #include "sizes.h"
 #include "tests.h"
 
+#include "android_wrapper.h"
+
 #define EXIT_FAIL_NONSTARTER    0x01
 #define EXIT_FAIL_ADDRESSLINES  0x02
 #define EXIT_FAIL_OTHERTEST     0x04

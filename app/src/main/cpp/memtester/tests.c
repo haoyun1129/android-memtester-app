@@ -22,6 +22,7 @@
 #include "sizes.h"
 #include "memtester.h"
 
+#include "android_wrapper.h"
 char progress[] = "-\\|/";
 #define PROGRESSLEN 4
 #define PROGRESSOFTEN 2500
