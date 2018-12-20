@@ -18,4 +18,7 @@
 #define putchar
 #define exit
 
+void onTestStart(int index, char* name);
+void onTestProgress(int index, int progress);
+
 #endif //MEMTESTER_ANDROID_WRAPPER_H

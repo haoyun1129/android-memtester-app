@@ -390,8 +390,10 @@ int main(int argc, char **argv) {
             if (testmask && (!((1 << i) & testmask))) {
                 continue;
             }
+            onTestStart(i, tests[i].name);
             printf("  %-20s: ", tests[i].name);
             if (!tests[i].fp(bufa, bufb, count)) {
+                onTestProgress(i, 100);
                 printf("ok\n");
             } else {
                 exit_code |= EXIT_FAIL_OTHERTEST;
