@@ -6,7 +6,8 @@ class MemTester {
 
     private static final String TAG = MemTester.class.getSimpleName();
 
-    public native void native_start();
+    private native void native_start();
+    private native String[] native_get_tests();
 
     private MemTesterListener mListener;
     static {
@@ -20,7 +21,9 @@ class MemTester {
     public void start() {
         native_start();
     }
-
+    public String[] getTests() {
+        return native_get_tests();
+    }
     public interface MemTesterListener {
         void onTestStart(int index, String name);
         void onTestProgress(int index, int progress);

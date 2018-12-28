@@ -13,7 +13,8 @@
  * file.
  *
  */
-
+#ifndef TESTS_H
+#define TESTS_H
 /* Function declaration. */
 
 int test_stuck_address(unsigned long volatile *bufa, size_t count);
@@ -36,4 +37,4 @@ int test_bitflip_comparison(unsigned long volatile *bufa, unsigned long volatile
 int test_8bit_wide_random(unsigned long volatile *bufa, unsigned long volatile *bufb, size_t count);
 int test_16bit_wide_random(unsigned long volatile *bufa, unsigned long volatile *bufb, size_t count);
 #endif
-
+#endif

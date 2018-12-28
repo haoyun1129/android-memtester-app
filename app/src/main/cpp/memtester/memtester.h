@@ -12,11 +12,14 @@
  * See other comments in that file.
  *
  */
-
+#ifndef MEMTESTER_H
+#define MEMTESTER_H
 #include <sys/types.h>
+#include "types.h"
 
 /* extern declarations. */
-
+#define TESTS_SIZE 16
 extern int use_phys;
 extern off_t physaddrbase;
-
+extern struct test tests[TESTS_SIZE];
+#endif

@@ -28,6 +28,7 @@
 #include "types.h"
 #include "sizes.h"
 #include "tests.h"
+#include "memtester.h"
 
 #include "android_wrapper.h"
 
@@ -35,7 +36,7 @@
 #define EXIT_FAIL_ADDRESSLINES  0x02
 #define EXIT_FAIL_OTHERTEST     0x04
 
-struct test tests[] = {
+struct test tests[TESTS_SIZE] = {
     { "Random Value", test_random_value },
     { "Compare XOR", test_xor_comparison },
     { "Compare SUB", test_sub_comparison },

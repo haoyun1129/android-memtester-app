@@ -11,7 +11,8 @@
  * This file contains typedefs, structure, and union definitions.
  *
  */
-
+#ifndef TYPES_H
+#define TYPES_H
 #include "sizes.h"
 
 typedef unsigned long ul;
@@ -34,3 +35,4 @@ union {
     unsigned short u16s[UL_LEN/16];
     ul val;
 } mword16;
+#endif

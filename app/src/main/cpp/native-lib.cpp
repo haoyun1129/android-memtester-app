@@ -2,9 +2,13 @@
 #include <string>
 #include <android/log.h>
 
+
 #define TAG "native-lib"
+#include "memtester/memtester.h"
 extern "C" {
+
     int main(int argc, char **argv);
+
 }
 
 jmethodID jMtdOnTestStart;
@@ -12,6 +16,7 @@ jmethodID jMtdOnTestProgress;
 JNIEnv *g_env;
 jobject g_instance;
 
+extern "C"
 JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
     __android_log_print(ANDROID_LOG_VERBOSE, TAG, "JNI_OnLoad");
     JNIEnv* env;
@@ -47,4 +52,16 @@ void onTestProgress(int index, int progress) {
     jint javaIndex= index;
     jint javaProgress = progress;
     g_env->CallVoidMethod(g_instance, jMtdOnTestProgress, javaIndex, javaProgress);
+}
+
+extern "C"
+JNIEXPORT jobjectArray JNICALL
+Java_com_haoyun_memtester_MemTester_native_1get_1tests(JNIEnv *env, jobject instance) {
+    jsize count = 8;
+    jobjectArray javaStringArray;
+    javaStringArray = env->NewObjectArray(count, env->FindClass("java/lang/String"), env->NewStringUTF(""));
+    for (int i = 0; i < count; i++) {
+        env->SetObjectArrayElement(javaStringArray, i, env->NewStringUTF((tests[i].name)));
+    }
+    return javaStringArray;
 }
