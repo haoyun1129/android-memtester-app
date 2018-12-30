@@ -13,6 +13,7 @@ public class MainActivity extends AppCompatActivity implements MemTester.MemTest
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int UPDATE_PROGRESS = 0;
+    private static final int TEST_COMPLETED = 1;
     private MemTester mMemTester;
     private RecyclerView mRvTests;
     private Handler mUiHandler;
@@ -51,18 +52,30 @@ public class MainActivity extends AppCompatActivity implements MemTester.MemTest
     }
 
     @Override
-    public void onTestProgress(int index, int progress) {
-        Message msg = mUiHandler.obtainMessage(UPDATE_PROGRESS, index, progress);
+    public void onTestProgress(int index, float progress) {
+        Message msg = mUiHandler.obtainMessage(UPDATE_PROGRESS, index, 0, progress);
+        msg.sendToTarget();
+    }
+
+    @Override
+    public void onTestCompleted(int index, MemTester.Status result) {
+        Message msg = mUiHandler.obtainMessage(TEST_COMPLETED, index, 0, result);
         msg.sendToTarget();
     }
 
     private class UiHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
+            int index;
             switch (msg.what) {
                 case UPDATE_PROGRESS:
-                    int index = msg.arg1;
-                    Log.v(TAG, "handleMessage: UPDATE_PROGRESS, index = " + msg.arg1 + ", progress=" + msg.arg2);
+                    index = msg.arg1;
+                    float progress = (float) msg.obj;
+                    Log.v(TAG, "handleMessage: UPDATE_PROGRESS, index=" + index + ", progress=" + progress);
+                    mTestAdapter.notifyItemChanged(index);
+                    break;
+                case TEST_COMPLETED:
+                    index = msg.arg1;
                     mTestAdapter.notifyItemChanged(index);
                     break;
             }

@@ -36,6 +36,8 @@
 #define EXIT_FAIL_ADDRESSLINES  0x02
 #define EXIT_FAIL_OTHERTEST     0x04
 
+static int s_current_index;
+
 struct test tests[TESTS_SIZE] = {
     { "Random Value", test_random_value },
     { "Compare XOR", test_xor_comparison },
@@ -391,21 +393,22 @@ int main(int argc, char **argv) {
             if (testmask && (!((1 << i) & testmask))) {
                 continue;
             }
+            s_current_index = i;
             onTestStart(i, tests[i].name);
-            printf("  %-20s: ", tests[i].name);
             if (!tests[i].fp(bufa, bufb, count)) {
                 onTestProgress(i, 100);
-                printf("ok\n");
             } else {
                 exit_code |= EXIT_FAIL_OTHERTEST;
             }
-            fflush(stdout);
+            onTestCompleted(i, 0);
         }
-        printf("\n");
-        fflush(stdout);
     }
     if (do_mlock) munlock((void *) aligned, bufsize);
     printf("Done.\n");
     fflush(stdout);
     exit(exit_code);
+}
+
+void tests_report_progress(float progress) {
+    onTestProgress(s_current_index, progress);
 }

@@ -11,6 +11,14 @@ class MemTester {
     private native void native_start();
     private native String[] native_get_tests();
 
+    private void onTestProgress(int index, float progress) {
+        Log.v(TAG, "onTestProgress: " + index + ", " + progress);
+        mMemTests.get(index).progress = progress;
+        if (mListener != null) {
+            mListener.onTestProgress(index, progress);
+        }
+    }
+
     private ArrayList<MemTest> mMemTests;
     private MemTesterListener mListener;
     static {
@@ -54,9 +62,12 @@ class MemTester {
         return mMemTests;
     }
 
-    public interface MemTesterListener {
-        void onTestStart(int index, String name);
-        void onTestProgress(int index, int progress);
+    private void onTestCompleted(int index, int status) {
+        Log.v(TAG, "onTestCompleted: " + index + ", " + status);
+        mMemTests.get(index).status = Status.fromInt(status);
+        if (mListener != null) {
+            mListener.onTestCompleted(index, mMemTests.get(index).status);
+        }
     }
 
     // Callback from native
@@ -66,11 +77,20 @@ class MemTester {
             mListener.onTestStart(index, name);
         }
     }
-    private void onTestProgress(int index, int progress) {
-        Log.v(TAG, "onTestStart: " + index + ", " +  progress);
-        mMemTests.get(index).progress = progress;
-        if (mListener != null) {
-            mListener.onTestProgress(index, progress);
+
+    public enum Status {
+        STOPPED, RUNNING, PASS, NG;
+
+        public static Status fromInt(int status) {
+            return Status.values()[status];
         }
+    }
+
+    public interface MemTesterListener {
+        void onTestStart(int index, String name);
+
+        void onTestProgress(int index, float progress);
+
+        void onTestCompleted(int index, Status result);
     }
 }

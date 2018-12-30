@@ -19,6 +19,9 @@
 #define exit
 
 void onTestStart(int index, char* name);
-void onTestProgress(int index, int progress);
+
+void onTestProgress(int index, float progress);
+
+void onTestCompleted(int index, int status);
 
 #endif //MEMTESTER_ANDROID_WRAPPER_H

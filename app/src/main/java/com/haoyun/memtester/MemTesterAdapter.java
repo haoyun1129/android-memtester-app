@@ -40,17 +40,10 @@ class MemTesterAdapter extends RecyclerView.Adapter<MemTesterAdapter.ViewHolder>
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         Log.v(TAG, "onBindViewHolder: viewHolder=" + viewHolder +", i=" + i);
         viewHolder.tvName.setText(mMemTests.get(i).name);
-        int progress = mMemTests.get(i).progress;
-        viewHolder.pbProgress.setProgress(progress);
-        String status;
-        if (progress == 100) {
-            status = "PASS";
-        } else if (progress == 0) {
-            status = "N/A";
-        } else {
-            status = "TESTING";
-        }
-        viewHolder.tvStatus.setText(status);
+        float progress = mMemTests.get(i).progress;
+
+        viewHolder.pbProgress.setProgress((int) progress);
+        viewHolder.tvStatus.setText(mMemTests.get(i).status.toString());
     }
 
     @Override
@@ -59,7 +52,6 @@ class MemTesterAdapter extends RecyclerView.Adapter<MemTesterAdapter.ViewHolder>
     }
     class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tvName;
-        public TextView tvProgressText;
         public ProgressBar pbProgress;
         public TextView tvStatus;
 

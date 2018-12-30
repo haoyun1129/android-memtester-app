@@ -22,4 +22,6 @@
 extern int use_phys;
 extern off_t physaddrbase;
 extern struct test tests[TESTS_SIZE];
+
+void tests_report_progress(float progress);
 #endif

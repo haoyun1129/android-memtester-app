@@ -105,16 +105,9 @@ int test_random_value(ulv *bufa, ulv *bufb, size_t count) {
     ul j = 0;
     size_t i;
 
-    putchar(' ');
-    fflush(stdout);
     for (i = 0; i < count; i++) {
         *p1++ = *p2++ = rand_ul();
-        if (!(i % PROGRESSOFTEN)) {
-            putchar(progress[++j % PROGRESSLEN]);
-            fflush(stdout);
-        }
     }
-    fflush(stdout);
     return compare_regions(bufa, bufb, count);
 }
 
@@ -218,24 +211,19 @@ int test_solidbits_comparison(ulv *bufa, ulv *bufb, size_t count) {
     ul q;
     size_t i;
 
-    printf("           ");
-    fflush(stdout);
-    for (j = 0; j < 64; j++) {
+    int total = 64;
+    for (j = 0; j < total; j++) {
         q = (j % 2) == 0 ? UL_ONEBITS : 0;
-        // printf("setting %3u", j);
-        fflush(stdout);
         p1 = (ulv *) bufa;
         p2 = (ulv *) bufb;
         for (i = 0; i < count; i++) {
             *p1++ = *p2++ = (i % 2) == 0 ? q : ~q;
         }
-        // printf("testing %3u", j);
-        fflush(stdout);
         if (compare_regions(bufa, bufb, count)) {
             return -1;
         }
+        tests_report_progress((j + 1) * 100.0f / total);
     }
-    fflush(stdout);
     return 0;
 }
 
@@ -246,24 +234,19 @@ int test_checkerboard_comparison(ulv *bufa, ulv *bufb, size_t count) {
     ul q;
     size_t i;
 
-    printf("           ");
-    fflush(stdout);
-    for (j = 0; j < 64; j++) {
+    int total = 64;
+    for (j = 0; j < total; j++) {
         q = (j % 2) == 0 ? CHECKERBOARD1 : CHECKERBOARD2;
-        // printf("setting %3u", j);
-        fflush(stdout);
         p1 = (ulv *) bufa;
         p2 = (ulv *) bufb;
         for (i = 0; i < count; i++) {
             *p1++ = *p2++ = (i % 2) == 0 ? q : ~q;
         }
-        // printf("testing %3u", j);
-        fflush(stdout);
         if (compare_regions(bufa, bufb, count)) {
             return -1;
         }
+        tests_report_progress((j + 1) * 100.0f / total);
     }
-    fflush(stdout);
     return 0;
 }
 
@@ -273,23 +256,18 @@ int test_blockseq_comparison(ulv *bufa, ulv *bufb, size_t count) {
     unsigned int j;
     size_t i;
 
-    printf("           ");
-    fflush(stdout);
-    for (j = 0; j < 256; j++) {
+    int total = 256;
+    for (j = 0; j < total; j++) {
         p1 = (ulv *) bufa;
         p2 = (ulv *) bufb;
-        // printf("setting %3u", j);
-        fflush(stdout);
         for (i = 0; i < count; i++) {
             *p1++ = *p2++ = (ul) UL_BYTE(j);
         }
-        // printf("testing %3u", j);
-        fflush(stdout);
         if (compare_regions(bufa, bufb, count)) {
             return -1;
         }
+        tests_report_progress((j + 1) * 100.0f / total);
     }
-    fflush(stdout);
     return 0;
 }
 
@@ -299,13 +277,10 @@ int test_walkbits0_comparison(ulv *bufa, ulv *bufb, size_t count) {
     unsigned int j;
     size_t i;
 
-    printf("           ");
-    fflush(stdout);
-    for (j = 0; j < UL_LEN * 2; j++) {
+    int total = UL_LEN * 2;
+    for (j = 0; j < total; j++) {
         p1 = (ulv *) bufa;
         p2 = (ulv *) bufb;
-        // printf("setting %3u", j);
-        fflush(stdout);
         for (i = 0; i < count; i++) {
             if (j < UL_LEN) { /* Walk it up. */
                 *p1++ = *p2++ = ONE << j;
@@ -313,13 +288,11 @@ int test_walkbits0_comparison(ulv *bufa, ulv *bufb, size_t count) {
                 *p1++ = *p2++ = ONE << (UL_LEN * 2 - j - 1);
             }
         }
-        // printf("testing %3u", j);
-        fflush(stdout);
         if (compare_regions(bufa, bufb, count)) {
             return -1;
         }
+        tests_report_progress((j + 1) * 100.0f / total);
     }
-    fflush(stdout);
     return 0;
 }
 
@@ -329,13 +302,10 @@ int test_walkbits1_comparison(ulv *bufa, ulv *bufb, size_t count) {
     unsigned int j;
     size_t i;
 
-    printf("           ");
-    fflush(stdout);
-    for (j = 0; j < UL_LEN * 2; j++) {
+    int total = UL_LEN * 2;
+    for (j = 0; j < total; j++) {
         p1 = (ulv *) bufa;
         p2 = (ulv *) bufb;
-        // printf("setting %3u", j);
-        fflush(stdout);
         for (i = 0; i < count; i++) {
             if (j < UL_LEN) { /* Walk it up. */
                 *p1++ = *p2++ = UL_ONEBITS ^ (ONE << j);
@@ -343,13 +313,11 @@ int test_walkbits1_comparison(ulv *bufa, ulv *bufb, size_t count) {
                 *p1++ = *p2++ = UL_ONEBITS ^ (ONE << (UL_LEN * 2 - j - 1));
             }
         }
-        // printf("testing %3u", j);
-        fflush(stdout);
         if (compare_regions(bufa, bufb, count)) {
             return -1;
         }
+        tests_report_progress((j + 1) * 100.0f / total);
     }
-    fflush(stdout);
     return 0;
 }
 
@@ -359,13 +327,10 @@ int test_bitspread_comparison(ulv *bufa, ulv *bufb, size_t count) {
     unsigned int j;
     size_t i;
 
-    printf("           ");
-    fflush(stdout);
-    for (j = 0; j < UL_LEN * 2; j++) {
+    int total = UL_LEN * 2;
+    for (j = 0; j < total; j++) {
         p1 = (ulv *) bufa;
         p2 = (ulv *) bufb;
-        // printf("setting %3u", j);
-        fflush(stdout);
         for (i = 0; i < count; i++) {
             if (j < UL_LEN) { /* Walk it up. */
                 *p1++ = *p2++ = (i % 2 == 0)
@@ -379,13 +344,11 @@ int test_bitspread_comparison(ulv *bufa, ulv *bufb, size_t count) {
                                     | (ONE << (UL_LEN * 2 + 1 - j)));
             }
         }
-        // printf("testing %3u", j);
-        fflush(stdout);
         if (compare_regions(bufa, bufb, count)) {
             return -1;
         }
+        tests_report_progress((j + 1) * 100.0f / total);
     }
-    fflush(stdout);
     return 0;
 }
 
@@ -396,27 +359,22 @@ int test_bitflip_comparison(ulv *bufa, ulv *bufb, size_t count) {
     ul q;
     size_t i;
 
-    printf("           ");
-    fflush(stdout);
+    int total = UL_LEN * 8;
     for (k = 0; k < UL_LEN; k++) {
         q = ONE << k;
         for (j = 0; j < 8; j++) {
             q = ~q;
-            // printf("setting %3u", k * 8 + j);
-            fflush(stdout);
             p1 = (ulv *) bufa;
             p2 = (ulv *) bufb;
             for (i = 0; i < count; i++) {
                 *p1++ = *p2++ = (i % 2) == 0 ? q : ~q;
             }
-            // printf("testing %3u", k * 8 + j);
-            fflush(stdout);
             if (compare_regions(bufa, bufb, count)) {
                 return -1;
             }
+            tests_report_progress((k * 8 + (j + 1)) * 100.0f / total);
         }
     }
-    fflush(stdout);
     return 0;
 }
 
