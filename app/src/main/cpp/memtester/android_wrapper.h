@@ -18,6 +18,12 @@
 #define putchar
 #define exit
 
+enum {
+    STOPPED,
+    RUNNING,
+    PASS,
+    NG
+};
 void onTestStart(int index, char* name);
 
 void onTestProgress(int index, float progress);

@@ -400,7 +400,7 @@ int main(int argc, char **argv) {
             } else {
                 exit_code |= EXIT_FAIL_OTHERTEST;
             }
-            onTestCompleted(i, 0);
+            onTestCompleted(i, PASS);
         }
     }
     if (do_mlock) munlock((void *) aligned, bufsize);

@@ -73,6 +73,7 @@ class MemTester {
     // Callback from native
     private void onTestStart(int index, String name) {
         Log.v(TAG, "onTestStart: " + index + ", " +  name);
+        mMemTests.get(index).status = Status.RUNNING;
         if (mListener != null) {
             mListener.onTestStart(index, name);
         }
