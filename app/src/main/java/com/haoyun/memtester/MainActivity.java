@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements MemTester.MemTest
         mRvTests = findViewById(R.id.rvTests);
         mMemTester = MemTester.getInstance();
         mTestAdapter = new MemTesterAdapter(this, mMemTester);
-        mRvTests.setLayoutManager(new LinearLayoutManager(this));
+        mRvTests.setLayoutManager(new GridLayoutManager(this, 2));
         mRvTests.setAdapter(mTestAdapter);
         mUiHandler = new UiHandler();
     }
@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements MemTester.MemTest
     }
 
     public void runTest(View v) {
+        mMemTester.reset();
+        mTestAdapter.notifyDataSetChanged();
         new Thread(new Runnable() {
             @Override
             public void run() {

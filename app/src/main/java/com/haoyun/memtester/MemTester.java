@@ -36,6 +36,12 @@ class MemTester {
         }
     }
 
+    public void reset() {
+        for (MemTest test : mMemTests) {
+            test.reset();
+        }
+    }
+
     static public MemTester getInstance() {
         if (sInstance == null) {
             synchronized (MemTester.class) {

@@ -113,6 +113,7 @@ void usage(char *me) {
 }
 
 int main(int argc, char **argv) {
+    optind = 1; // Fix optind increases when this function is called.
     ul loops, loop, i;
     size_t pagesize, wantraw, wantmb, wantbytes, wantbytes_orig, bufsize,
          halflen, count;
