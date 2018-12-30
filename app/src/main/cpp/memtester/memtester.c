@@ -398,6 +398,7 @@ int main(int argc, char **argv) {
             if (!tests[i].fp(bufa, bufb, count)) {
                 onTestProgress(i, 100);
             } else {
+                onTestCompleted(i, NG);
                 exit_code |= EXIT_FAIL_OTHERTEST;
             }
             onTestCompleted(i, PASS);

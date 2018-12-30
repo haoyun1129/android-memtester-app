@@ -55,7 +55,7 @@ void onTestProgress(int index, float progress) {
 
 extern "C"
 void onTestCompleted(int index, int result) {
-    __android_log_print(ANDROID_LOG_VERBOSE, TAG, "onTestProgress: %d, %d", index, result);
+    __android_log_print(ANDROID_LOG_VERBOSE, TAG, "onTestCompleted: %d, %d", index, result);
     g_env->CallVoidMethod(g_instance, jMtdOnTestCompleted, index, result);
 }
 
