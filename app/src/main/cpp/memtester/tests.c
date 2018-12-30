@@ -16,7 +16,6 @@
 #include <sys/types.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
 
 #include "types.h"
 #include "sizes.h"
@@ -67,13 +66,13 @@ int test_stuck_address(ulv *bufa, size_t count) {
     fflush(stdout);
     for (j = 0; j < 16; j++) {
         p1 = (ulv *) bufa;
-        printf("setting %3u", j);
+        // printf("setting %3u", j);
         fflush(stdout);
         for (i = 0; i < count; i++) {
             *p1 = ((j + i) % 2) == 0 ? (ul) p1 : ~((ul) p1);
             *p1++;
         }
-        printf("testing %3u", j);
+        // printf("testing %3u", j);
         fflush(stdout);
         p1 = (ulv *) bufa;
         for (i = 0; i < count; i++, p1++) {
@@ -223,14 +222,14 @@ int test_solidbits_comparison(ulv *bufa, ulv *bufb, size_t count) {
     fflush(stdout);
     for (j = 0; j < 64; j++) {
         q = (j % 2) == 0 ? UL_ONEBITS : 0;
-        printf("setting %3u", j);
+        // printf("setting %3u", j);
         fflush(stdout);
         p1 = (ulv *) bufa;
         p2 = (ulv *) bufb;
         for (i = 0; i < count; i++) {
             *p1++ = *p2++ = (i % 2) == 0 ? q : ~q;
         }
-        printf("testing %3u", j);
+        // printf("testing %3u", j);
         fflush(stdout);
         if (compare_regions(bufa, bufb, count)) {
             return -1;
@@ -251,14 +250,14 @@ int test_checkerboard_comparison(ulv *bufa, ulv *bufb, size_t count) {
     fflush(stdout);
     for (j = 0; j < 64; j++) {
         q = (j % 2) == 0 ? CHECKERBOARD1 : CHECKERBOARD2;
-        printf("setting %3u", j);
+        // printf("setting %3u", j);
         fflush(stdout);
         p1 = (ulv *) bufa;
         p2 = (ulv *) bufb;
         for (i = 0; i < count; i++) {
             *p1++ = *p2++ = (i % 2) == 0 ? q : ~q;
         }
-        printf("testing %3u", j);
+        // printf("testing %3u", j);
         fflush(stdout);
         if (compare_regions(bufa, bufb, count)) {
             return -1;
@@ -279,12 +278,12 @@ int test_blockseq_comparison(ulv *bufa, ulv *bufb, size_t count) {
     for (j = 0; j < 256; j++) {
         p1 = (ulv *) bufa;
         p2 = (ulv *) bufb;
-        printf("setting %3u", j);
+        // printf("setting %3u", j);
         fflush(stdout);
         for (i = 0; i < count; i++) {
             *p1++ = *p2++ = (ul) UL_BYTE(j);
         }
-        printf("testing %3u", j);
+        // printf("testing %3u", j);
         fflush(stdout);
         if (compare_regions(bufa, bufb, count)) {
             return -1;
@@ -305,7 +304,7 @@ int test_walkbits0_comparison(ulv *bufa, ulv *bufb, size_t count) {
     for (j = 0; j < UL_LEN * 2; j++) {
         p1 = (ulv *) bufa;
         p2 = (ulv *) bufb;
-        printf("setting %3u", j);
+        // printf("setting %3u", j);
         fflush(stdout);
         for (i = 0; i < count; i++) {
             if (j < UL_LEN) { /* Walk it up. */
@@ -314,7 +313,7 @@ int test_walkbits0_comparison(ulv *bufa, ulv *bufb, size_t count) {
                 *p1++ = *p2++ = ONE << (UL_LEN * 2 - j - 1);
             }
         }
-        printf("testing %3u", j);
+        // printf("testing %3u", j);
         fflush(stdout);
         if (compare_regions(bufa, bufb, count)) {
             return -1;
@@ -335,7 +334,7 @@ int test_walkbits1_comparison(ulv *bufa, ulv *bufb, size_t count) {
     for (j = 0; j < UL_LEN * 2; j++) {
         p1 = (ulv *) bufa;
         p2 = (ulv *) bufb;
-        printf("setting %3u", j);
+        // printf("setting %3u", j);
         fflush(stdout);
         for (i = 0; i < count; i++) {
             if (j < UL_LEN) { /* Walk it up. */
@@ -344,7 +343,7 @@ int test_walkbits1_comparison(ulv *bufa, ulv *bufb, size_t count) {
                 *p1++ = *p2++ = UL_ONEBITS ^ (ONE << (UL_LEN * 2 - j - 1));
             }
         }
-        printf("testing %3u", j);
+        // printf("testing %3u", j);
         fflush(stdout);
         if (compare_regions(bufa, bufb, count)) {
             return -1;
@@ -365,7 +364,7 @@ int test_bitspread_comparison(ulv *bufa, ulv *bufb, size_t count) {
     for (j = 0; j < UL_LEN * 2; j++) {
         p1 = (ulv *) bufa;
         p2 = (ulv *) bufb;
-        printf("setting %3u", j);
+        // printf("setting %3u", j);
         fflush(stdout);
         for (i = 0; i < count; i++) {
             if (j < UL_LEN) { /* Walk it up. */
@@ -380,7 +379,7 @@ int test_bitspread_comparison(ulv *bufa, ulv *bufb, size_t count) {
                                     | (ONE << (UL_LEN * 2 + 1 - j)));
             }
         }
-        printf("testing %3u", j);
+        // printf("testing %3u", j);
         fflush(stdout);
         if (compare_regions(bufa, bufb, count)) {
             return -1;
@@ -403,14 +402,14 @@ int test_bitflip_comparison(ulv *bufa, ulv *bufb, size_t count) {
         q = ONE << k;
         for (j = 0; j < 8; j++) {
             q = ~q;
-            printf("setting %3u", k * 8 + j);
+            // printf("setting %3u", k * 8 + j);
             fflush(stdout);
             p1 = (ulv *) bufa;
             p2 = (ulv *) bufb;
             for (i = 0; i < count; i++) {
                 *p1++ = *p2++ = (i % 2) == 0 ? q : ~q;
             }
-            printf("testing %3u", k * 8 + j);
+            // printf("testing %3u", k * 8 + j);
             fflush(stdout);
             if (compare_regions(bufa, bufb, count)) {
                 return -1;

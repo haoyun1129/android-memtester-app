@@ -1,5 +1,4 @@
 #include <jni.h>
-#include <string>
 #include <android/log.h>
 
 
@@ -57,7 +56,7 @@ void onTestProgress(int index, int progress) {
 extern "C"
 JNIEXPORT jobjectArray JNICALL
 Java_com_haoyun_memtester_MemTester_native_1get_1tests(JNIEnv *env, jobject instance) {
-    jsize count = 8;
+    jsize count = TESTS_SIZE;
     jobjectArray javaStringArray;
     javaStringArray = env->NewObjectArray(count, env->FindClass("java/lang/String"), env->NewStringUTF(""));
     for (int i = 0; i < count; i++) {

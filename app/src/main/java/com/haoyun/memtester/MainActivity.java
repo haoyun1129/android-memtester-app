@@ -1,78 +1,78 @@
 package com.haoyun.memtester;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements MemTester.MemTesterListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final int UPDATE_PROGRESS = 0;
     private MemTester mMemTester;
-    private TextView mTv;
-    private String mName;
-    private int mProgress;
-    private String[] mTestNames;
-    private int mIndex;
     private RecyclerView mRvTests;
+    private Handler mUiHandler;
+    private MemTesterAdapter mTestAdapter;
+    private Runnable updateUI = new Runnable() {
+        @Override
+        public void run() {
+            // mTv.setText(mName + ": " + mProgress + ", " + getTestCount());
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTv = findViewById(R.id.sample_text);
         mRvTests = findViewById(R.id.rvTests);
-        mMemTester = new MemTester();
-        RecyclerView.Adapter testAdapter = new MemTesterAdapter(this, mMemTester);
+        mMemTester = MemTester.getInstance();
+        mTestAdapter = new MemTesterAdapter(this, mMemTester);
         mRvTests.setLayoutManager(new LinearLayoutManager(this));
-        mRvTests.setAdapter(testAdapter);
+        mRvTests.setAdapter(mTestAdapter);
+        mUiHandler = new UiHandler();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        startMemTester();
-    }
-
-    private void startMemTester() {
         mMemTester.register(MainActivity.this);
-        mTestNames = mMemTester.getTests();
-        // new Thread(new Runnable() {
-        //     @Override
-        //     public void run() {
-        //
-        //
-        //         mMemTester.start();
-        //     }
-        // }).start();
     }
 
     @Override
     public void onTestStart(int index, String name) {
-        mName = name;
-        mProgress = 0;
         runOnUiThread(updateUI);
+    }
+
+    public void runTest(View v) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mMemTester.start();
+            }
+        }).start();
     }
 
     @Override
     public void onTestProgress(int index, int progress) {
-        mIndex = index;
-        mProgress = progress;
-        runOnUiThread(updateUI);
+        Message msg = mUiHandler.obtainMessage(UPDATE_PROGRESS, index, progress);
+        msg.sendToTarget();
     }
 
-
-    private Runnable updateUI = new Runnable() {
+    private class UiHandler extends Handler {
         @Override
-        public void run() {
-            mTv.setText(mName + ": " + mProgress + ", " + getTestCount());
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case UPDATE_PROGRESS:
+                    int index = msg.arg1;
+                    Log.v(TAG, "handleMessage: UPDATE_PROGRESS, index = " + msg.arg1 + ", progress=" + msg.arg2);
+                    mTestAdapter.notifyItemChanged(index);
+                    break;
+            }
         }
-    };
-    private int getTestCount() {
-        return mTestNames.length;
     }
 }
