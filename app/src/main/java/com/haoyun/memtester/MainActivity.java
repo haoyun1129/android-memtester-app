@@ -17,12 +17,6 @@ public class MainActivity extends AppCompatActivity implements MemTester.MemTest
     private RecyclerView mRvTests;
     private Handler mUiHandler;
     private MemTesterAdapter mTestAdapter;
-    private Runnable updateUI = new Runnable() {
-        @Override
-        public void run() {
-            // mTv.setText(mName + ": " + mProgress + ", " + getTestCount());
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements MemTester.MemTest
 
     @Override
     public void onTestStart(int index, String name) {
-        runOnUiThread(updateUI);
     }
 
     public void runTest(View v) {
