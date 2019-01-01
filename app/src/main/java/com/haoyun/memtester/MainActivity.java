@@ -8,8 +8,11 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity implements MemTester.MemTesterListener {
+import com.haoyun.memtester.ui.SizeDialogFragment;
+
+public class MainActivity extends AppCompatActivity implements MemTester.MemTesterListener, SizeDialogFragment.SizeResultListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int UPDATE_PROGRESS = 0;
@@ -18,6 +21,9 @@ public class MainActivity extends AppCompatActivity implements MemTester.MemTest
     private RecyclerView mRvTests;
     private Handler mUiHandler;
     private MemTesterAdapter mTestAdapter;
+    private Button mBtnTestSize;
+    private int mTestSize;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements MemTester.MemTest
         mTestAdapter = new MemTesterAdapter(this, mMemTester);
         mRvTests.setLayoutManager(new GridLayoutManager(this, 2));
         mRvTests.setAdapter(mTestAdapter);
+        mBtnTestSize = findViewById(R.id.btnTestSize);
         mUiHandler = new UiHandler();
     }
 
@@ -48,9 +55,15 @@ public class MainActivity extends AppCompatActivity implements MemTester.MemTest
         new Thread(new Runnable() {
             @Override
             public void run() {
-                mMemTester.start();
+                mMemTester.start(mTestSize);
             }
         }).start();
+    }
+
+    public void setSize(View v) {
+        SizeDialogFragment sizeDialog = new SizeDialogFragment();
+        sizeDialog.setResultListener(this);
+        sizeDialog.show(getSupportFragmentManager(), "size_dialog");
     }
 
     @Override
@@ -63,6 +76,12 @@ public class MainActivity extends AppCompatActivity implements MemTester.MemTest
     public void onTestCompleted(int index, MemTester.Status result) {
         Message msg = mUiHandler.obtainMessage(TEST_COMPLETED, index, 0, result);
         msg.sendToTarget();
+    }
+
+    @Override
+    public void onSizeResult(int size) {
+        mTestSize = size;
+        mBtnTestSize.setText(size + " MB");
     }
 
     private class UiHandler extends Handler {

@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MemTester</string>
+    <string name="size_dialog_message">Select the memory size you want to test</string>
+    <string name="size_dialog_title">Memory Test Size</string>
+    <string name="Cancel">Cancel</string>
+    <string name="OK">OK</string>
 </resources>

@@ -1,5 +1,6 @@
 #include <jni.h>
 #include <android/log.h>
+#include <cstdio>
 
 
 #define TAG "native-lib"
@@ -32,10 +33,12 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_haoyun_memtester_MemTester_native_1start(JNIEnv *env, jobject instance) {
+Java_com_haoyun_memtester_MemTester_native_1start(JNIEnv *env, jobject instance, jint size) {
     g_env = env;
     g_instance = instance;
-    char* argv[] = {"./memtester", "4M", "1"};
+    char arg_size[10] = {0};
+    sprintf(arg_size, "%dM", size);
+    char *argv[] = {"./memtester", arg_size, "1"};
     main(3, argv);
 }
 

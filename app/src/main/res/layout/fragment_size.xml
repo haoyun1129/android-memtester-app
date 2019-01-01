@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
+
+    <!-- Manually imitate an entire AlertDialog layout -->
+    <!-- See dialog specs on: https://material.google.com/components/dialogs.html#dialogs-specs -->
+
+    <!-- Title and content -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:paddingLeft="24dp"
+        android:paddingTop="24dp"
+        android:paddingRight="24dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/size_dialog_title"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/size_dialog_message"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvShowSize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal"
+            android:text="TextView" />
+
+        <SeekBar
+            android:id="@+id/sbSize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:max="63"
+            android:progress="0" />
+
+
+    </LinearLayout>
+
+    <!-- Action area -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:gravity="right"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <Button
+            android:id="@+id/neg_button"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:background="@android:color/transparent"
+            android:text="@string/Cancel"
+            android:textColor="@color/colorAccent" />
+
+        <Button
+            android:id="@+id/pos_button"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_marginLeft="8dp"
+            android:background="@android:color/transparent"
+            android:text="@string/OK"
+            android:textColor="@color/colorAccent" />
+
+    </LinearLayout>
+
+</LinearLayout>
