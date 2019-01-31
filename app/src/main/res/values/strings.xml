@@ -2,6 +2,8 @@
     <string name="app_name">MemTester</string>
     <string name="size_dialog_message">Select the memory size you want to test</string>
     <string name="size_dialog_title">Memory Test Size</string>
+    <string name="loop_dialog_message">Select the loop times you want to test</string>
+    <string name="loop_dialog_title">Test Loop</string>
     <string name="Cancel">Cancel</string>
     <string name="OK">OK</string>
     <string name="memtester">memtester</string>

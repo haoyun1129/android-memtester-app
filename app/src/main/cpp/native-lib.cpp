@@ -33,12 +33,15 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_haoyun_memtester_MemTester_native_1start(JNIEnv *env, jobject instance, jint size) {
+Java_com_haoyun_memtester_MemTester_native_1start(JNIEnv *env, jobject instance, jint size,
+                                                  jint loop) {
     g_env = env;
     g_instance = instance;
     char arg_size[10] = {0};
+    char arg_loop[10] = {0};
     sprintf(arg_size, "%dM", size);
-    char *argv[] = {"./memtester", arg_size, "1"};
+    sprintf(arg_loop, "%d", loop);
+    char *argv[] = {"./memtester", arg_size, arg_loop};
     main(3, argv);
 }
 

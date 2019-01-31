@@ -11,12 +11,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 
+import com.haoyun.memtester.ui.LoopDialogFragment;
 import com.haoyun.memtester.ui.SizeDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MemTester.MemTesterListener, SizeDialogFragment.SizeResultListener {
+public class MainActivity extends AppCompatActivity implements MemTester.MemTesterListener, SizeDialogFragment.SizeResultListener, LoopDialogFragment.LoopResultListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int UPDATE_PROGRESS = 0;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements MemTester.MemTest
     private Button mBtnEnter;
     private Button mBtnMemtester;
     private List<Button> mButtons;
+    private int mLoop = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements MemTester.MemTest
         new Thread(new Runnable() {
             @Override
             public void run() {
-                mMemTester.start(mTestSize);
+                mMemTester.start(mTestSize, mLoop);
             }
         }).start();
     }
@@ -88,6 +90,13 @@ public class MainActivity extends AppCompatActivity implements MemTester.MemTest
         sizeDialog.setResultListener(this);
         sizeDialog.show(getSupportFragmentManager(), "size_dialog");
     }
+
+    public void setLoop(View view) {
+        LoopDialogFragment loopDialog = new LoopDialogFragment();
+        loopDialog.setResultListener(this);
+        loopDialog.show(getSupportFragmentManager(), "loop_dialog");
+    }
+
 
     @Override
     public void onTestProgress(int index, float progress) {
@@ -112,6 +121,12 @@ public class MainActivity extends AppCompatActivity implements MemTester.MemTest
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(url));
         startActivity(i);
+    }
+
+    @Override
+    public void onLoopResult(int loop) {
+        mLoop = loop;
+        mBtnTestLoop.setText(String.valueOf(loop));
     }
 
     private class UiHandler extends Handler {

@@ -9,7 +9,7 @@ class MemTester {
     private static final String TAG = MemTester.class.getSimpleName();
     static private MemTester sInstance;
 
-    private native void native_start(int size);
+    private native void native_start(int size, int loop);
     private native String[] native_get_tests();
 
     private void onTestProgress(int index, float progress) {
@@ -58,8 +58,8 @@ class MemTester {
         mListener = listener;
     }
 
-    public void start(int size) {
-        native_start(size);
+    public void start(int size, int loop) {
+        native_start(size, loop);
     }
     public String[] getTests() {
         return native_get_tests();

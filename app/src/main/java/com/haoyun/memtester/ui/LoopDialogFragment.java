@@ -15,25 +15,25 @@ import com.haoyun.memtester.R;
 
 import java.util.Locale;
 
-public class SizeDialogFragment extends DialogFragment {
+public class LoopDialogFragment extends DialogFragment {
 
-    private static final int MIN_TEST_SIZE_MB = 1;
-    private static final int MAX_TEST_SIZE_MB = 1024;
-    private TextView mTvShowSize;
-    private SeekBar mSbSize;
-    private SizeResultListener mListener;
+    private static final int MIN_LOOP = 1;
+    private static final int MAX_LOOP = 1024;
+    private TextView mTvShowLoop;
+    private SeekBar mSbLoop;
+    private LoopResultListener mListener;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View dialogView = inflater.inflate(R.layout.fragment_size, container, false);
-        mTvShowSize = dialogView.findViewById(R.id.tvShowSize);
-        mSbSize = dialogView.findViewById(R.id.sbSize);
-        mSbSize.setMax(MAX_TEST_SIZE_MB / MIN_TEST_SIZE_MB - 1);
-        mSbSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        View dialogView = inflater.inflate(R.layout.fragment_loop, container, false);
+        mTvShowLoop = dialogView.findViewById(R.id.tvShowSize);
+        mSbLoop = dialogView.findViewById(R.id.sbSize);
+        mSbLoop.setMax(MAX_LOOP / MIN_LOOP - 1);
+        mSbLoop.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-                updateSizeText();
+                updateLoopText();
             }
 
             @Override
@@ -50,7 +50,7 @@ public class SizeDialogFragment extends DialogFragment {
         buttonPos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onSizeResult(calcSizeByProgress(mSbSize.getProgress()));
+                mListener.onLoopResult(calcSizeByProgress(mSbLoop.getProgress()));
                 dismiss();
             }
         });
@@ -67,24 +67,24 @@ public class SizeDialogFragment extends DialogFragment {
                     dismiss();
             }
         });
-        updateSizeText();
+        updateLoopText();
         return dialogView;
     }
 
-    private void updateSizeText() {
-        int sizeMB = calcSizeByProgress(mSbSize.getProgress());
-        mTvShowSize.setText(String.format(Locale.US, "%d MB", sizeMB));
+    private void updateLoopText() {
+        int sizeMB = calcSizeByProgress(mSbLoop.getProgress());
+        mTvShowLoop.setText(String.format(Locale.US, "%d", sizeMB));
     }
 
     private int calcSizeByProgress(int progress) {
-        return MIN_TEST_SIZE_MB * (progress + 1);
+        return MIN_LOOP * (progress + 1);
     }
 
-    public void setResultListener(SizeResultListener listener) {
+    public void setResultListener(LoopResultListener listener) {
         mListener = listener;
     }
 
-    public interface SizeResultListener {
-        void onSizeResult(int size);
+    public interface LoopResultListener {
+        void onLoopResult(int loop);
     }
 }
