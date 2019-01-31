@@ -1,5 +1,7 @@
 package com.haoyun.memtester;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,6 +14,9 @@ import android.widget.Button;
 
 import com.haoyun.memtester.ui.SizeDialogFragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements MemTester.MemTesterListener, SizeDialogFragment.SizeResultListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -23,7 +28,10 @@ public class MainActivity extends AppCompatActivity implements MemTester.MemTest
     private MemTesterAdapter mTestAdapter;
     private Button mBtnTestSize;
     private int mTestSize;
-
+    private Button mBtnTestLoop;
+    private Button mBtnEnter;
+    private Button mBtnMemtester;
+    private List<Button> mButtons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +41,17 @@ public class MainActivity extends AppCompatActivity implements MemTester.MemTest
         mRvTests = findViewById(R.id.rvTests);
         mMemTester = MemTester.getInstance();
         mTestAdapter = new MemTesterAdapter(this, mMemTester);
-        mRvTests.setLayoutManager(new GridLayoutManager(this, 2));
+        mRvTests.setLayoutManager(new GridLayoutManager(this, 1));
         mRvTests.setAdapter(mTestAdapter);
+        mBtnMemtester = findViewById(R.id.btnMemtester);
         mBtnTestSize = findViewById(R.id.btnTestSize);
+        mBtnTestLoop = findViewById(R.id.btnTestLoop);
+        mBtnEnter = findViewById(R.id.btnEnter);
+        mButtons = new ArrayList<>();
+        mButtons.add(mBtnMemtester);
+        mButtons.add(mBtnTestSize);
+        mButtons.add(mBtnTestLoop);
+        mButtons.add(mBtnEnter);
         mUiHandler = new UiHandler();
     }
 
@@ -52,12 +68,19 @@ public class MainActivity extends AppCompatActivity implements MemTester.MemTest
     public void runTest(View v) {
         mMemTester.reset();
         mTestAdapter.notifyDataSetChanged();
+        setViewsEnabled(false);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 mMemTester.start(mTestSize);
             }
         }).start();
+    }
+
+    private void setViewsEnabled(boolean enabled) {
+        for (Button b: mButtons) {
+            b.setEnabled(enabled);
+        }
     }
 
     public void setSize(View v) {
@@ -84,6 +107,13 @@ public class MainActivity extends AppCompatActivity implements MemTester.MemTest
         mBtnTestSize.setText(size + " MB");
     }
 
+    public void linkToMemtester(View view) {
+        String url = "http://pyropus.ca/software/memtester/";
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
+    }
+
     private class UiHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
@@ -98,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements MemTester.MemTest
                 case TEST_COMPLETED:
                     index = msg.arg1;
                     mTestAdapter.notifyItemChanged(index);
+                    setViewsEnabled(true);
                     break;
             }
         }

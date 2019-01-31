@@ -4,4 +4,8 @@
     <string name="size_dialog_title">Memory Test Size</string>
     <string name="Cancel">Cancel</string>
     <string name="OK">OK</string>
+    <string name="memtester">memtester</string>
+    <string name="lt_mem_gt"><![CDATA[<mem>]]></string>
+    <string name="loop">[loop]</string>
+    <string name="enter_symbol">⏎</string>
 </resources>
