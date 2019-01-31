@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements MemTester.MemTest
         mButtons.add(mBtnTestLoop);
         mButtons.add(mBtnEnter);
         mUiHandler = new UiHandler();
+        onSizeResult(1);
     }
 
     @Override

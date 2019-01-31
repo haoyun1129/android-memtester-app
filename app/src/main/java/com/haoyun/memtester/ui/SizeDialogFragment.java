@@ -15,7 +15,7 @@ import com.haoyun.memtester.R;
 
 public class SizeDialogFragment extends DialogFragment {
 
-    private static final int MIN_TEST_SIZE_MB = 8;
+    private static final int MIN_TEST_SIZE_MB = 1;
     private static final int MAX_TEST_SIZE_MB = 1024;
     private TextView mTvShowSize;
     private SeekBar mSbSize;
