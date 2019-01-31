@@ -71,9 +71,11 @@ class MemTester {
 
     private void onTestCompleted(int index, int status) {
         Log.v(TAG, "onTestCompleted: " + index + ", " + status);
-        mMemTests.get(index).status = Status.fromInt(status);
+        if (index != -1) {
+            mMemTests.get(index).status = Status.fromInt(status);
+        }
         if (mListener != null) {
-            mListener.onTestCompleted(index, mMemTests.get(index).status);
+            mListener.onTestCompleted(index, Status.fromInt(status));
         }
     }
 

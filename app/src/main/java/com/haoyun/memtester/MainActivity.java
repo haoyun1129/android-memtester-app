@@ -8,7 +8,6 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -122,13 +121,16 @@ public class MainActivity extends AppCompatActivity implements MemTester.MemTest
                 case UPDATE_PROGRESS:
                     index = msg.arg1;
                     float progress = (float) msg.obj;
-                    Log.v(TAG, "handleMessage: UPDATE_PROGRESS, index=" + index + ", progress=" + progress);
+                    // Log.v(TAG, "handleMessage: UPDATE_PROGRESS, index=" + index + ", progress=" + progress);
                     mTestAdapter.notifyItemChanged(index);
                     break;
                 case TEST_COMPLETED:
                     index = msg.arg1;
-                    mTestAdapter.notifyItemChanged(index);
-                    setViewsEnabled(true);
+                    if (index == -1) {
+                        setViewsEnabled(true);
+                    } else {
+                        mTestAdapter.notifyItemChanged(index);
+                    }
                     break;
             }
         }

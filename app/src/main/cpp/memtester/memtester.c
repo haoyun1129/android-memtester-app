@@ -406,7 +406,7 @@ int main(int argc, char **argv) {
         }
     }
     if (do_mlock) munlock((void *) aligned, bufsize);
-    printf("Done.\n");
+    onTestCompleted(-1, PASS);
     fflush(stdout);
     exit(exit_code);
 }
