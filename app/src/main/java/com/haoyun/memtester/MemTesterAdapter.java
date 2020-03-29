@@ -18,7 +18,7 @@ class MemTesterAdapter extends RecyclerView.Adapter<MemTesterAdapter.ViewHolder>
     private final ArrayList<MemTest> mMemTests;
     private Context mContext;
 
-    public MemTesterAdapter(Context c, MemTester memTester) {
+    MemTesterAdapter(Context c, MemTester memTester) {
         mContext = c;
         mMemTester = memTester;
         mMemTests = mMemTester.getMemTests();
@@ -27,7 +27,7 @@ class MemTesterAdapter extends RecyclerView.Adapter<MemTesterAdapter.ViewHolder>
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        Log.v(TAG, "onCreateViewHolder: viewGroup=" + viewGroup +", i=" + i);
+        Log.v(TAG, "onCreateViewHolder: viewGroup=" + viewGroup + ", i=" + i);
         View view = LayoutInflater.from(mContext).inflate(R.layout.cell_test, viewGroup, false);
         ViewHolder holder = new ViewHolder(view);
         holder.tvName = view.findViewById(R.id.tvName);
@@ -38,7 +38,7 @@ class MemTesterAdapter extends RecyclerView.Adapter<MemTesterAdapter.ViewHolder>
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        Log.v(TAG, "onBindViewHolder: viewHolder=" + viewHolder +", i=" + i);
+        Log.v(TAG, "onBindViewHolder: viewHolder=" + viewHolder + ", i=" + i);
         viewHolder.tvName.setText(mMemTests.get(i).name);
         float progress = mMemTests.get(i).progress;
 
@@ -50,12 +50,13 @@ class MemTesterAdapter extends RecyclerView.Adapter<MemTesterAdapter.ViewHolder>
     public int getItemCount() {
         return mMemTests.size();
     }
-    class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvName;
-        public ProgressBar pbProgress;
-        public TextView tvStatus;
 
-        public ViewHolder(View itemView) {
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView tvName;
+        ProgressBar pbProgress;
+        TextView tvStatus;
+
+        ViewHolder(View itemView) {
             super(itemView);
         }
     }
