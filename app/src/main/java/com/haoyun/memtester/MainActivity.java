@@ -35,6 +35,16 @@ public class MainActivity extends AppCompatActivity implements MemTester.MemTest
     private int mLoop = 1;
     private boolean mFollowUpdateItem = true;
     private int mPosition = -1;
+    private RecyclerView.AdapterDataObserver mDataObserver = new RecyclerView.AdapterDataObserver() {
+        @Override
+        public void onItemRangeChanged(int positionStart, int itemCount) {
+            super.onItemRangeChanged(positionStart, itemCount);
+            if (positionStart == mPosition)
+                return;
+            mPosition = positionStart;
+            mRvTests.scrollToPosition(mPosition);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,17 +70,6 @@ public class MainActivity extends AppCompatActivity implements MemTester.MemTest
         onSizeResult(1);
     }
 
-    private RecyclerView.AdapterDataObserver mDataObserver = new RecyclerView.AdapterDataObserver() {
-        @Override
-        public void onItemRangeChanged(int positionStart, int itemCount) {
-            super.onItemRangeChanged(positionStart, itemCount);
-            if (positionStart == mPosition)
-                return;
-            mPosition = positionStart;
-            mRvTests.scrollToPosition(mPosition);
-        }
-    };
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -94,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements MemTester.MemTest
     }
 
     private void setViewsEnabled(boolean enabled) {
-        for (Button b: mButtons) {
+        for (Button b : mButtons) {
             b.setEnabled(enabled);
         }
     }
