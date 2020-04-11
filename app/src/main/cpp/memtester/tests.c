@@ -26,7 +26,11 @@ char progress[] = "-\\|/";
 #define PROGRESSLEN 4
 #define PROGRESSOFTEN 2500
 #define ONE 0x00000001L
+//#define FAILURE_TEST
 
+#ifdef FAILURE_TEST
+void make_random_position_error(ulv *buf, size_t count);
+#endif
 /* Function definitions. */
 
 int compare_regions(ulv *bufa, ulv *bufb, size_t count) {
@@ -108,6 +112,11 @@ int test_random_value(ulv *bufa, ulv *bufb, size_t count) {
     for (i = 0; i < count; i++) {
         *p1++ = *p2++ = rand_ul();
     }
+
+#ifdef FAILURE_TEST
+    make_random_position_error(bufa, count);
+#endif
+
     return compare_regions(bufa, bufb, count);
 }
 
@@ -121,6 +130,11 @@ int test_xor_comparison(ulv *bufa, ulv *bufb, size_t count) {
         *p1++ ^= q;
         *p2++ ^= q;
     }
+
+#ifdef FAILURE_TEST
+    make_random_position_error(bufa, count);
+#endif
+
     return compare_regions(bufa, bufb, count);
 }
 
@@ -134,6 +148,11 @@ int test_sub_comparison(ulv *bufa, ulv *bufb, size_t count) {
         *p1++ -= q;
         *p2++ -= q;
     }
+
+#ifdef FAILURE_TEST
+    make_random_position_error(bufa, count);
+#endif
+
     return compare_regions(bufa, bufb, count);
 }
 
@@ -147,6 +166,11 @@ int test_mul_comparison(ulv *bufa, ulv *bufb, size_t count) {
         *p1++ *= q;
         *p2++ *= q;
     }
+
+#ifdef FAILURE_TEST
+    make_random_position_error(bufa, count);
+#endif
+
     return compare_regions(bufa, bufb, count);
 }
 
@@ -163,6 +187,11 @@ int test_div_comparison(ulv *bufa, ulv *bufb, size_t count) {
         *p1++ /= q;
         *p2++ /= q;
     }
+
+#ifdef FAILURE_TEST
+    make_random_position_error(bufa, count);
+#endif
+
     return compare_regions(bufa, bufb, count);
 }
 
@@ -176,6 +205,11 @@ int test_or_comparison(ulv *bufa, ulv *bufb, size_t count) {
         *p1++ |= q;
         *p2++ |= q;
     }
+
+#ifdef FAILURE_TEST
+    make_random_position_error(bufa, count);
+#endif
+
     return compare_regions(bufa, bufb, count);
 }
 
@@ -189,6 +223,11 @@ int test_and_comparison(ulv *bufa, ulv *bufb, size_t count) {
         *p1++ &= q;
         *p2++ &= q;
     }
+
+#ifdef FAILURE_TEST
+    make_random_position_error(bufa, count);
+#endif
+
     return compare_regions(bufa, bufb, count);
 }
 
@@ -201,6 +240,11 @@ int test_seqinc_comparison(ulv *bufa, ulv *bufb, size_t count) {
     for (i = 0; i < count; i++) {
         *p1++ = *p2++ = (i + q);
     }
+
+#ifdef FAILURE_TEST
+    make_random_position_error(bufa, count);
+#endif
+
     return compare_regions(bufa, bufb, count);
 }
 
@@ -212,6 +256,9 @@ int test_solidbits_comparison(ulv *bufa, ulv *bufb, size_t count) {
     size_t i;
 
     int total = 64;
+#ifdef FAILURE_TEST
+    int fail_index = rand() % total;
+#endif
     for (j = 0; j < total; j++) {
         q = (j % 2) == 0 ? UL_ONEBITS : 0;
         p1 = (ulv *) bufa;
@@ -219,6 +266,11 @@ int test_solidbits_comparison(ulv *bufa, ulv *bufb, size_t count) {
         for (i = 0; i < count; i++) {
             *p1++ = *p2++ = (i % 2) == 0 ? q : ~q;
         }
+#ifdef FAILURE_TEST
+        if (j == fail_index) {
+            make_random_position_error(bufa, count);
+        }
+#endif
         if (compare_regions(bufa, bufb, count)) {
             return -1;
         }
@@ -235,6 +287,9 @@ int test_checkerboard_comparison(ulv *bufa, ulv *bufb, size_t count) {
     size_t i;
 
     int total = 64;
+#ifdef FAILURE_TEST
+    int fail_index = rand() % total;
+#endif
     for (j = 0; j < total; j++) {
         q = (j % 2) == 0 ? CHECKERBOARD1 : CHECKERBOARD2;
         p1 = (ulv *) bufa;
@@ -242,6 +297,11 @@ int test_checkerboard_comparison(ulv *bufa, ulv *bufb, size_t count) {
         for (i = 0; i < count; i++) {
             *p1++ = *p2++ = (i % 2) == 0 ? q : ~q;
         }
+#ifdef FAILURE_TEST
+        if (j == fail_index) {
+            make_random_position_error(bufa, count);
+        }
+#endif
         if (compare_regions(bufa, bufb, count)) {
             return -1;
         }
@@ -257,12 +317,20 @@ int test_blockseq_comparison(ulv *bufa, ulv *bufb, size_t count) {
     size_t i;
 
     int total = 256;
+#ifdef FAILURE_TEST
+    int fail_index = rand() % total;
+#endif
     for (j = 0; j < total; j++) {
         p1 = (ulv *) bufa;
         p2 = (ulv *) bufb;
         for (i = 0; i < count; i++) {
             *p1++ = *p2++ = (ul) UL_BYTE(j);
         }
+#ifdef FAILURE_TEST
+        if (j == fail_index) {
+            make_random_position_error(bufa, count);
+        }
+#endif
         if (compare_regions(bufa, bufb, count)) {
             return -1;
         }
@@ -278,6 +346,9 @@ int test_walkbits0_comparison(ulv *bufa, ulv *bufb, size_t count) {
     size_t i;
 
     int total = UL_LEN * 2;
+#ifdef FAILURE_TEST
+    int fail_index = rand() % total;
+#endif
     for (j = 0; j < total; j++) {
         p1 = (ulv *) bufa;
         p2 = (ulv *) bufb;
@@ -288,6 +359,11 @@ int test_walkbits0_comparison(ulv *bufa, ulv *bufb, size_t count) {
                 *p1++ = *p2++ = ONE << (UL_LEN * 2 - j - 1);
             }
         }
+#ifdef FAILURE_TEST
+        if (j == fail_index) {
+            make_random_position_error(bufa, count);
+        }
+#endif
         if (compare_regions(bufa, bufb, count)) {
             return -1;
         }
@@ -303,6 +379,9 @@ int test_walkbits1_comparison(ulv *bufa, ulv *bufb, size_t count) {
     size_t i;
 
     int total = UL_LEN * 2;
+#ifdef FAILURE_TEST
+    int fail_index = rand() % total;
+#endif
     for (j = 0; j < total; j++) {
         p1 = (ulv *) bufa;
         p2 = (ulv *) bufb;
@@ -313,6 +392,11 @@ int test_walkbits1_comparison(ulv *bufa, ulv *bufb, size_t count) {
                 *p1++ = *p2++ = UL_ONEBITS ^ (ONE << (UL_LEN * 2 - j - 1));
             }
         }
+#ifdef FAILURE_TEST
+        if (j == fail_index) {
+            make_random_position_error(bufa, count);
+        }
+#endif
         if (compare_regions(bufa, bufb, count)) {
             return -1;
         }
@@ -328,6 +412,9 @@ int test_bitspread_comparison(ulv *bufa, ulv *bufb, size_t count) {
     size_t i;
 
     int total = UL_LEN * 2;
+#ifdef FAILURE_TEST
+    int fail_index = rand() % total;
+#endif
     for (j = 0; j < total; j++) {
         p1 = (ulv *) bufa;
         p2 = (ulv *) bufb;
@@ -344,6 +431,11 @@ int test_bitspread_comparison(ulv *bufa, ulv *bufb, size_t count) {
                                     | (ONE << (UL_LEN * 2 + 1 - j)));
             }
         }
+#ifdef FAILURE_TEST
+        if (j == fail_index) {
+            make_random_position_error(bufa, count);
+        }
+#endif
         if (compare_regions(bufa, bufb, count)) {
             return -1;
         }
@@ -360,6 +452,10 @@ int test_bitflip_comparison(ulv *bufa, ulv *bufb, size_t count) {
     size_t i;
 
     int total = UL_LEN * 8;
+#ifdef FAILURE_TEST
+    int fail_index = rand() % total;
+    int index = 0;
+#endif
     for (k = 0; k < UL_LEN; k++) {
         q = ONE << k;
         for (j = 0; j < 8; j++) {
@@ -369,6 +465,12 @@ int test_bitflip_comparison(ulv *bufa, ulv *bufb, size_t count) {
             for (i = 0; i < count; i++) {
                 *p1++ = *p2++ = (i % 2) == 0 ? q : ~q;
             }
+#ifdef FAILURE_TEST
+            if (index == fail_index) {
+                make_random_position_error(bufa, count);
+            }
+            index++;
+#endif
             if (compare_regions(bufa, bufb, count)) {
                 return -1;
             }
@@ -451,3 +553,13 @@ int test_16bit_wide_random(ulv* bufa, ulv* bufb, size_t count) {
     return 0;
 }
 #endif
+
+#ifdef FAILURE_TEST
+void make_random_position_error(ulv *buf, size_t count) {
+    size_t index = rand() % count;
+    ulv temp = *(buf + count);
+    temp = temp ^ 1; // make LSB flip
+    *(buf + index) = temp;
+}
+#endif
+

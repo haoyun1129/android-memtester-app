@@ -70,12 +70,23 @@ class MemTester {
     }
 
     private void onTestCompleted(int index, int status) {
-        Log.v(TAG, "onTestCompleted: " + index + ", " + status);
+        Status result = Status.fromInt(status);
+        Log.v(TAG, "onTestCompleted: " + index + ", " + result);
         if (index != -1) {
-            mMemTests.get(index).status = Status.fromInt(status);
+            mMemTests.get(index).status = result;
         }
-        if (mListener != null) {
-            mListener.onTestCompleted(index, Status.fromInt(status));
+        if (mListener == null) {
+            return;
+        }
+        switch (result) {
+            case STOPPED:
+                break;
+            case RUNNING:
+                break;
+            case PASS:
+            case NG:
+                mListener.onTestCompleted(index, result);
+                break;
         }
     }
 
