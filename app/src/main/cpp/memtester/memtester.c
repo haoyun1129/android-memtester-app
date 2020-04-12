@@ -398,11 +398,11 @@ int main(int argc, char **argv) {
             onTestStart(i, tests[i].name);
             if (!tests[i].fp(bufa, bufb, count)) {
                 onTestProgress(i, 100);
+                onTestCompleted(i, PASS);
             } else {
                 onTestCompleted(i, NG);
                 exit_code |= EXIT_FAIL_OTHERTEST;
             }
-            onTestCompleted(i, PASS);
         }
     }
     if (do_mlock) munlock((void *) aligned, bufsize);
