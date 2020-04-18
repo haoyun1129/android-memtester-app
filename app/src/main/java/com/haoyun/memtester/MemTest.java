@@ -24,4 +24,11 @@ class MemTest {
     public void log(int priority, String message) {
         mLog.add(message);
     }
+
+    public String getLastMessage() {
+        if (mLog == null || mLog.size() == 0) {
+            return "";
+        }
+        return mLog.get(mLog.size() - 1);
+    }
 }

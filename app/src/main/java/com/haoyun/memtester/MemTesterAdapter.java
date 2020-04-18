@@ -33,6 +33,7 @@ class MemTesterAdapter extends RecyclerView.Adapter<MemTesterAdapter.ViewHolder>
         holder.tvName = view.findViewById(R.id.tvName);
         holder.pbProgress = view.findViewById(R.id.progressBar);
         holder.tvStatus = view.findViewById(R.id.tvStatus);
+        holder.tvLog = view.findViewById(R.id.tvLog);
         return holder;
     }
 
@@ -44,6 +45,7 @@ class MemTesterAdapter extends RecyclerView.Adapter<MemTesterAdapter.ViewHolder>
 
         viewHolder.pbProgress.setProgress((int) progress);
         viewHolder.tvStatus.setText(mMemTests.get(i).status.toString());
+        viewHolder.tvLog.setText(mMemTests.get(i).getLastMessage());
     }
 
     @Override
@@ -55,6 +57,7 @@ class MemTesterAdapter extends RecyclerView.Adapter<MemTesterAdapter.ViewHolder>
         TextView tvName;
         ProgressBar pbProgress;
         TextView tvStatus;
+        TextView tvLog;
 
         ViewHolder(View itemView) {
             super(itemView);
