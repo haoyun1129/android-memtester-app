@@ -414,3 +414,14 @@ int main(int argc, char **argv) {
 void tests_report_progress(float progress) {
     onTestProgress(s_current_index, progress);
 }
+
+int my_fprintf(FILE *fp, const char *fmt, ...) {
+    if (fp == stderr) {
+        char message[256];
+        va_list arg_ptr;
+        va_start(arg_ptr, fmt);
+        snprintf(message, sizeof(message), fmt, arg_ptr);
+        va_end(arg_ptr);
+        onMessage(ANDROID_LOG_ERROR, message);
+    }
+}

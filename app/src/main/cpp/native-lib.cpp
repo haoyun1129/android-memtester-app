@@ -14,6 +14,7 @@ extern "C" {
 jmethodID jMtdOnTestStart;
 jmethodID jMtdOnTestProgress;
 jmethodID jMtdOnTestCompleted;
+jmethodID jMtdOnMessage;
 JNIEnv *g_env;
 jobject g_instance;
 
@@ -28,6 +29,7 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
     jMtdOnTestStart = env->GetMethodID(clz, "onTestStart", "(ILjava/lang/String;)V");
     jMtdOnTestProgress = env->GetMethodID(clz, "onTestProgress", "(IF)V");
     jMtdOnTestCompleted = env->GetMethodID(clz, "onTestCompleted", "(II)V");
+    jMtdOnMessage = env->GetMethodID(clz, "onMessage", "(ILjava/lang/String;)V");
     return JNI_VERSION_1_6;
 }
 
@@ -47,7 +49,7 @@ Java_com_haoyun_memtester_MemTester_native_1start(JNIEnv *env, jobject instance,
 
 extern "C"
 void onTestStart(int index, char* name) {
-    __android_log_print(ANDROID_LOG_VERBOSE, TAG, "onTestStart: %d, %s", index, name);
+    __android_log_print(ANDROID_LOG_INFO, TAG, "onTestStart: %d, %s", index, name);
     jint javaIndex= index;
     jstring javaName = g_env->NewStringUTF(name);
     g_env->CallVoidMethod(g_instance, jMtdOnTestStart, javaIndex, javaName);
@@ -61,7 +63,7 @@ void onTestProgress(int index, float progress) {
 
 extern "C"
 void onTestCompleted(int index, int result) {
-    __android_log_print(ANDROID_LOG_VERBOSE, TAG, "onTestCompleted: %d, %d", index, result);
+    __android_log_print(ANDROID_LOG_INFO, TAG, "onTestCompleted: %d, %d", index, result);
     g_env->CallVoidMethod(g_instance, jMtdOnTestCompleted, index, result);
 }
 
@@ -76,3 +78,12 @@ Java_com_haoyun_memtester_MemTester_native_1get_1tests(JNIEnv *env, jobject inst
     }
     return javaStringArray;
 }
+
+extern "C"
+void onMessage(int priority, char* message) {
+    __android_log_print(ANDROID_LOG_VERBOSE, TAG, "onMessage: %d, %s", priority, message);
+    jint javaPriority= priority;
+    jstring javaMessage = g_env->NewStringUTF(message);
+    g_env->CallVoidMethod(g_instance, jMtdOnMessage, javaPriority, javaMessage);
+}
+

@@ -8,6 +8,7 @@ class MemTester {
 
     private static final String TAG = MemTester.class.getSimpleName();
     static private MemTester sInstance;
+    private int mCurrentIndex;
 
     private native void native_start(int size, int loop);
     private native String[] native_get_tests();
@@ -93,10 +94,23 @@ class MemTester {
     // Callback from native
     private void onTestStart(int index, String name) {
         Log.v(TAG, "onTestStart: " + index + ", " +  name);
+        mCurrentIndex = index;
         mMemTests.get(index).status = Status.RUNNING;
         if (mListener != null) {
             mListener.onTestStart(index, name);
         }
+    }
+
+    // Callback from native
+    private void onMessage(int priority, String message) {
+        Log.v(TAG, "onMessage: priority=" + priority + ": " + message);
+        if (priority <= Log.ERROR && priority >= Log.VERBOSE) {
+            mMemTests.get(mCurrentIndex).log(priority, message);
+        }
+    }
+
+    private enum MessageType {
+        FAILURE
     }
 
     public enum Status {

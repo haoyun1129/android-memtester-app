@@ -24,4 +24,5 @@ extern off_t physaddrbase;
 extern struct test tests[TESTS_SIZE];
 
 void tests_report_progress(float progress);
+int my_fprintf(FILE *fp, const char *fmt, ...);
 #endif
